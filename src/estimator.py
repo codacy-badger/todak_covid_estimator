@@ -16,8 +16,6 @@ data = '''
 }
 '''
 
-
-
 def estimator(data):
   output = {}
   dataOuput= {}
@@ -27,6 +25,7 @@ def estimator(data):
   dataOuput.update(json_data)
   output.update({"data": dataOuput})
   reportedCases = json_data['reportedCases']
+  periodType = json_data['periodType']
   timeToElapse = json_data['timeToElapse']
   totalHospitalBeds = json_data['totalHospitalBeds']
   avgDailyIncomeInUSD = json_data['region']['avgDailyIncomeInUSD']
@@ -34,16 +33,23 @@ def estimator(data):
 
 # IMPACT
   # CHALLENGE 1
-  powerFactor = timeToElapse/3
   currentlyInfectedImpact = reportedCases * 10
-  infectionsByRequestedTimeImpact = int(currentlyInfectedImpact * (2**powerFactor))
+  if periodType == "days" :
+    powerFactor = timeToElapse/3
+    infectionsByRequestedTimeImpact = int(currentlyInfectedImpact * (2**powerFactor))
+  if periodType == "weeks" :
+    powerFactor = (timeToElapse*7)/3
+    infectionsByRequestedTimeImpact = int(currentlyInfectedImpact * (2**powerFactor))
+  if periodType == "months" :
+    powerFactor = (timeToElapse*30)/3
+    infectionsByRequestedTimeImpact = int(currentlyInfectedImpact * (2**powerFactor))
   # CHALLENGE 2
   severeCasesByRequestedTimeImpact = int(0.15 * infectionsByRequestedTimeImpact) 
   hospitalBedsByRequestedTimeImpact = int(totalHospitalBeds - severeCasesByRequestedTimeImpact)
   # CHALLENGE 3
   casesForICUByRequestedTimeImpact = int(0.05 * infectionsByRequestedTimeImpact) 
   casesForVentilatorsByRequestedTimeImpact = int(0.02 * infectionsByRequestedTimeImpact) 
-  dollarsInFlightImpact = infectionsByRequestedTimeImpact *30* avgDailyIncomeInUSD * avgDailyIncomePopulation
+  dollarsInFlightImpact = round((infectionsByRequestedTimeImpact *30* avgDailyIncomeInUSD * avgDailyIncomePopulation),2)
 
   impact.update({"currentlyInfected": currentlyInfectedImpact})
   impact.update({"infectionsByRequestedTime": infectionsByRequestedTimeImpact})
@@ -56,14 +62,22 @@ def estimator(data):
 # SEVERELY IMPACT
   # CHALLENGE 1
   currentlyInfectedSevereImpact = reportedCases * 50
-  infectionsByRequestedTimeSevereImpact = int(currentlyInfectedSevereImpact * (2**powerFactor))
+  if periodType == "days" :
+    powerFactor = timeToElapse/3
+    infectionsByRequestedTimeSevereImpact = int(currentlyInfectedSevereImpact * (2**powerFactor))
+  if periodType == "weeks" :
+    powerFactor = (timeToElapse*7)/3
+    infectionsByRequestedTimeSevereImpact = int(currentlyInfectedSevereImpact * (2**powerFactor))
+  if periodType == "months" :
+    powerFactor = (timeToElapse*30)/3
+    infectionsByRequestedTimeSevereImpact = int(currentlyInfectedSevereImpact * (2**powerFactor))
   # CHALLENGE 2
   severeCasesByRequestedTimeSevereImpact = int(0.15 * infectionsByRequestedTimeSevereImpact)
   hospitalBedsByRequestedTimeSevereImpact = int(totalHospitalBeds - severeCasesByRequestedTimeSevereImpact)
   # CHALLENGE 3
   casesForICUByRequestedTimeSevereImpact = int(0.05 * infectionsByRequestedTimeSevereImpact) 
   casesForVentilatorsByRequestedTimeSevereImpact = int(0.02 * infectionsByRequestedTimeSevereImpact)
-  dollarsInFlightSevereImpact = infectionsByRequestedTimeSevereImpact *30* avgDailyIncomeInUSD * avgDailyIncomePopulation
+  dollarsInFlightSevereImpact = round((infectionsByRequestedTimeSevereImpact *30* avgDailyIncomeInUSD * avgDailyIncomePopulation),2)
 
   severeImpact.update({"currentlyInfected": currentlyInfectedSevereImpact})
   severeImpact.update({"infectionsByRequestedTime": infectionsByRequestedTimeSevereImpact})
