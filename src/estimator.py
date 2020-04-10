@@ -1,35 +1,34 @@
 import json
 
-data = '''
-{
-    "region": {
-      "name": "Africa",
-      "avgAge": 19.7,
-      "avgDailyIncomeInUSD": 5,
-      "avgDailyIncomePopulation": 0.71
+data = {
+  'region': {
+      'name': "Africa",
+      'avgAge': 19.7,
+      'avgDailyIncomeInUSD': 5,
+      'avgDailyIncomePopulation': 0.71
     },
-    "periodType": "days",
-    "timeToElapse": 58,
-    "reportedCases": 674,
-    "population": 66622705,
-    "totalHospitalBeds": 1380614
+    'periodType': "days",
+    'timeToElapse': 58,
+    'reportedCases': 674,
+    'population': 66622705,
+    'totalHospitalBeds': 1380614
 }
-'''
+      
 
-def estimator(data):
+
+
+def estimator(**data):
   output = {}
   dataOuput= {}
   impact= {}
   severeImpact = {}
-  json_data = json.loads(data)
-  dataOuput.update(json_data)
-  output.update({"data": dataOuput})
-  reportedCases = json_data['reportedCases']
-  periodType = json_data['periodType']
-  timeToElapse = json_data['timeToElapse']
-  totalHospitalBeds = json_data['totalHospitalBeds']
-  avgDailyIncomeInUSD = json_data['region']['avgDailyIncomeInUSD']
-  avgDailyIncomePopulation = json_data['region']['avgDailyIncomePopulation']
+  output.update({"data": data})
+  reportedCases = data['reportedCases']
+  periodType = data['periodType']
+  timeToElapse = data['timeToElapse']
+  totalHospitalBeds = data['totalHospitalBeds']
+  avgDailyIncomeInUSD = data['region']['avgDailyIncomeInUSD']
+  avgDailyIncomePopulation = data['region']['avgDailyIncomePopulation']
 
 # IMPACT
   # CHALLENGE 1
@@ -91,9 +90,11 @@ def estimator(data):
   output.update({"impact": impact})
   output.update({"severeImpact": severeImpact})
 
-  json_output = json.dumps(output)
+  # json_output = json.dumps(output)
   # print(json_output) 
-  return json_output 
+  # print(output) 
+  # return json_output 
+  return output
 
-estimator(data)
+estimator(**data)
 
