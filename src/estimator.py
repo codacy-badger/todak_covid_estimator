@@ -96,5 +96,5 @@ def estimator(**data):
   # return json_output 
   return output
 
-estimator(**data)
+
 
